@@ -17,7 +17,6 @@
     <modules>
         <module>orchestrator</module>
         <module>common</module>
-        <module>knowledge</module>
     </modules>
 
     <properties>

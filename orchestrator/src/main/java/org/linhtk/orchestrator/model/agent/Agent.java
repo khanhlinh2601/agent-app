@@ -30,6 +30,7 @@ public class Agent extends AbstractAuditEntity {
     public String instructions;
     public String providerName;
     public String providerModelName;
+    public String providerEmbeddingModelName;
     public String providerEndpoint;
     public String providerApiKey;
     public boolean isPublished;
