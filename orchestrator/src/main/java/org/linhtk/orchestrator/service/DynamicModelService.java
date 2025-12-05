@@ -16,6 +16,9 @@ import org.springframework.ai.openai.OpenAiEmbeddingOptions;
 import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -153,6 +156,8 @@ public class DynamicModelService {
         // Configure chat options with the specified model name
         OpenAiChatOptions chatOptions = OpenAiChatOptions.builder()
                 .model(agent.getProviderModelName())
+                .maxTokens(agent.getMaxTokens())
+                .topP(agent.topP)
                 .build();
         
         // Create OpenAI ChatModel with all observability features enabled
@@ -180,9 +185,7 @@ public class DynamicModelService {
         OpenAiApi openAiApi = createOpenAiApi(agent);
         
         // Use agent's configured embedding model name, fallback to text-embedding-ada-002 if not specified
-        String embeddingModelName = agent.getProviderEmbeddingModelName() != null && !agent.getProviderEmbeddingModelName().isBlank()
-                ? agent.getProviderEmbeddingModelName()
-                : "text-embedding-ada-002"; // Default fallback for backward compatibility
+        String embeddingModelName = agent.getProviderEmbeddingModelName();
         
         OpenAiEmbeddingOptions embeddingOptions = OpenAiEmbeddingOptions.builder()
                 .model(embeddingModelName)
@@ -210,11 +213,15 @@ public class DynamicModelService {
      */
     private OpenAiApi createOpenAiApi(Agent agent) {
         // Use custom endpoint if provided, otherwise use default OpenAI endpoint
-        String baseUrl = agent.getProviderEndpoint();
+        String baseUrl = agent.baseUrl;
 
         log.debug("Creating OpenAI API instance with endpoint: {}", baseUrl);
         return OpenAiApi.builder()
-                .baseUrl(agent.getProviderEndpoint())
+                .baseUrl(baseUrl)
+                .completionsPath(agent.chatCompletionsPath)
+                .embeddingsPath(agent.embeddingsPath)
+                .restClientBuilder(RestClient.builder())
+                .webClientBuilder(WebClient.builder())
                 .apiKey(agent.getProviderApiKey())
                 .build();
     }

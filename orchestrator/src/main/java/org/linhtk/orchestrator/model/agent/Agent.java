@@ -31,8 +31,13 @@ public class Agent extends AbstractAuditEntity {
     public String providerName;
     public String providerModelName;
     public String providerEmbeddingModelName;
-    public String providerEndpoint;
+    public int dimension;
+    public String baseUrl;
+    public String embeddingsPath;
+    public String chatCompletionsPath;
     public String providerApiKey;
-    public boolean isPublished;
     public boolean isDefault;
+    public int temperature;
+    public int maxTokens;
+    public double topP;
 }

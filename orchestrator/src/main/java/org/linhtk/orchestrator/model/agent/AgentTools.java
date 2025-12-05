@@ -26,7 +26,6 @@ public class AgentTools extends AbstractAuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public String id;
-
     public String agentId;
     public String name;
     public String description;

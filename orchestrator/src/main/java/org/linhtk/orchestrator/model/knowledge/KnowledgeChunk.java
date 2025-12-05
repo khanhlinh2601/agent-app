@@ -38,6 +38,8 @@ public class KnowledgeChunk extends AbstractAuditEntity {
     @Column(name = "knowledge_id", nullable = false)
     private String knowledgeId;
 
+    @Column(name = "agent_id", nullable = false)
+    private String agentId;
     /**
      * Sequential order of this chunk within the parent knowledge source.
      * Used to maintain original document structure and enable ordered retrieval.
