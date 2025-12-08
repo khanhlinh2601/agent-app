@@ -156,8 +156,9 @@ public class DynamicModelService {
         // Configure chat options with the specified model name
         OpenAiChatOptions chatOptions = OpenAiChatOptions.builder()
                 .model(agent.getProviderModelName())
+                .temperature(agent.getTemperature())
                 .maxTokens(agent.getMaxTokens())
-                .topP(agent.topP)
+                .topP(agent.getTopP())
                 .build();
         
         // Create OpenAI ChatModel with all observability features enabled
@@ -189,6 +190,7 @@ public class DynamicModelService {
         
         OpenAiEmbeddingOptions embeddingOptions = OpenAiEmbeddingOptions.builder()
                 .model(embeddingModelName)
+                .dimensions(agent.getDimension())
                 .build();
         
         // Create OpenAI EmbeddingModel with built-in observability
@@ -213,13 +215,13 @@ public class DynamicModelService {
      */
     private OpenAiApi createOpenAiApi(Agent agent) {
         // Use custom endpoint if provided, otherwise use default OpenAI endpoint
-        String baseUrl = agent.baseUrl;
+        String baseUrl = agent.getBaseUrl();
 
         log.debug("Creating OpenAI API instance with endpoint: {}", baseUrl);
         return OpenAiApi.builder()
                 .baseUrl(baseUrl)
-                .completionsPath(agent.chatCompletionsPath)
-                .embeddingsPath(agent.embeddingsPath)
+                .completionsPath(agent.getChatCompletionsPath())
+                .embeddingsPath(agent.getEmbeddingsPath())
                 .restClientBuilder(RestClient.builder())
                 .webClientBuilder(WebClient.builder())
                 .apiKey(agent.getProviderApiKey())

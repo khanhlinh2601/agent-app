@@ -2,6 +2,8 @@ package org.linhtk.common.model;
 
 import jakarta.persistence.EntityListeners;
 import java.time.ZonedDateTime;
+
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,6 +15,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 @Getter
 @Setter
 @EntityListeners(CustomAuditingEntityListener.class)
+@MappedSuperclass
 public class AbstractAuditEntity {
 
     @CreationTimestamp

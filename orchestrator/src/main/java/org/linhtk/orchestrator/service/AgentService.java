@@ -99,9 +99,7 @@ public class AgentService {
         
         // Clear cache to ensure fresh model configuration when agent is used
         dynamicModelService.clearAgentCache(savedAgent.getId());
-        
-        log.info("Successfully created agent: id={}, name={}", 
-                savedAgent.getId(), savedAgent.getName());
+
         
         return agentMapper.toVmResponse(savedAgent);
     }
@@ -136,9 +134,7 @@ public class AgentService {
         
         // Clear cache to ensure fresh model configuration
         dynamicModelService.clearAgentCache(agentId);
-        
-        log.info("Successfully updated agent: id={}, name={}", 
-                updatedAgent.getId(), updatedAgent.getName());
+
         
         return agentMapper.toVmResponse(updatedAgent);
     }

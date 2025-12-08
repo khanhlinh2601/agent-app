@@ -70,7 +70,7 @@ public class KnowledgeChunkService {
 
         // Build knowledge chunk entity
         KnowledgeChunk chunk = KnowledgeChunk.builder()
-                .knowledgeId(knowledgeId)
+                .agentKnowledgeId(knowledgeId)
                 .content(document.getText())
                 .chunkOrder(chunkOrder)
                 .metadata(document.getMetadata())
@@ -206,7 +206,7 @@ public class KnowledgeChunkService {
                 if (chunkId != null) {
                     knowledgeChunkRepository.findById(chunkId).ifPresent(chunk -> {
                         // Only include chunks from the specified knowledge source
-                        if (knowledgeId.equals(chunk.getKnowledgeId()) && agentId.equals(chunk.getAgentId())) {
+                        if (knowledgeId.equals(chunk.getAgentKnowledgeId()) && agentId.equals(chunk.getAgentId())) {
                             similarChunks.add(chunk);
                         }
                     });
@@ -259,7 +259,7 @@ public class KnowledgeChunkService {
                 .orElseThrow(() -> new NotFoundException("Chunk not found with ID: " + chunkId));
 
         // Verify the chunk belongs to the specified knowledge and agent
-        if (!knowledgeId.equals(existingChunk.getKnowledgeId())) {
+        if (!knowledgeId.equals(existingChunk.getAgentKnowledgeId())) {
             throw new NotFoundException("Chunk " + chunkId + " does not belong to knowledge " + knowledgeId);
         }
 

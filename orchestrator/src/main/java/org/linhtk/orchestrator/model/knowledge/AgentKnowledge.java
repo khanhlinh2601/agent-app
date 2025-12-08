@@ -23,15 +23,20 @@ import java.util.Map;
 @Setter
 @Builder
 public class AgentKnowledge extends AbstractAuditEntity {
+    
+    /**
+     * Unique identifier for the knowledge source.
+     * Generated as UUID for distributed system compatibility.
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     /**
-     * Associated agent that owns this knowledge source.
-     * Uses lazy loading to optimize performance when agent details are not needed.
+     * Reference to the parent agent that owns this knowledge source.
+     * Stored as UUID string without foreign key constraint for flexibility.
      */
-    @Column(name = "agent_id", length = 50)
+    @Column(name = "agent_id", nullable = false, length = 50)
     private String agentId;
 
     /**
@@ -45,7 +50,7 @@ public class AgentKnowledge extends AbstractAuditEntity {
      * Type of knowledge source (e.g., DOCUMENT, URL, DATABASE).
      * Stored as string enum for flexibility and readability.
      */
-    @Column(name = "source_type", length = 50)
+    @Column(name = "source_type", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private KnowledgeSourceType sourceType;
 

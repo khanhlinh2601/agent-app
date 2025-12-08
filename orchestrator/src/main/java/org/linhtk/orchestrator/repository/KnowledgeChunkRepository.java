@@ -35,7 +35,7 @@ public interface KnowledgeChunkRepository extends JpaRepository<KnowledgeChunk, 
     @Query("""
         SELECT COALESCE(MAX(c.chunkOrder), 0)
         FROM KnowledgeChunk c
-        WHERE c.knowledgeId = :knowledgeId AND c.agentId  = :agentId
+        WHERE c.agentKnowledgeId = :knowledgeId AND c.agentId  = :agentId
         """)
     int findMaxChunkOrderByKnowledgeIdAndAgentId(@Param("knowledgeId") String knowledgeId, 
                                                    @Param("agentId") String agentId);
@@ -51,7 +51,7 @@ public interface KnowledgeChunkRepository extends JpaRepository<KnowledgeChunk, 
     @Query("""
         SELECT c
         FROM KnowledgeChunk c
-        WHERE c.knowledgeId = :knowledgeId AND c.agentId = :agentId
+        WHERE c.agentKnowledgeId = :knowledgeId AND c.agentId = :agentId
         ORDER BY c.chunkOrder ASC
         """)
     List<KnowledgeChunk> findAllByKnowledgeIdAndAgentId(@Param("knowledgeId") String knowledgeId,

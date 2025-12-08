@@ -1,22 +1,11 @@
 package org.linhtk.orchestrator.model.chat;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 import org.linhtk.common.model.AbstractAuditEntity;
-import org.linhtk.orchestrator.model.agent.Agent;
 
 @Entity
 @Table(name = "conversation")
-@IdClass(Agent.class)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

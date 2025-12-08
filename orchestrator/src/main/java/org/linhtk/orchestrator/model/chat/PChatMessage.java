@@ -16,7 +16,6 @@ import org.linhtk.orchestrator.model.agent.Agent;
 
 @Entity
 @Table(name = "pchat_message")
-@IdClass(Agent.class)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

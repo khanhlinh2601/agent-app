@@ -27,19 +27,29 @@ import java.util.Map;
 @Setter
 @Builder
 public class KnowledgeChunk extends AbstractAuditEntity {
+    
+    /**
+     * Unique identifier for the knowledge chunk.
+     * Generated as UUID for distributed system compatibility.
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     /**
-     * Parent knowledge source that this chunk belongs to.
-     * Uses lazy loading to optimize performance when full knowledge details are not needed.
+     * Reference to the parent knowledge source that this chunk belongs to.
+     * Stored as UUID string without foreign key constraint for flexibility.
      */
-    @Column(name = "knowledge_id", nullable = false)
-    private String knowledgeId;
+    @Column(name = "agent_knowledge_id", nullable = false, length = 50)
+    private String agentKnowledgeId;
 
-    @Column(name = "agent_id", nullable = false)
+    /**
+     * Reference to the agent that owns this knowledge chunk.
+     * Denormalized for faster querying without joins.
+     */
+    @Column(name = "agent_id", nullable = false, length = 50)
     private String agentId;
+    
     /**
      * Sequential order of this chunk within the parent knowledge source.
      * Used to maintain original document structure and enable ordered retrieval.
@@ -84,5 +94,4 @@ public class KnowledgeChunk extends AbstractAuditEntity {
     @Column(name = "embedding_1536")
     @JdbcTypeCode(SqlTypes.VECTOR)
     private float[] embedding1536;
-
 }

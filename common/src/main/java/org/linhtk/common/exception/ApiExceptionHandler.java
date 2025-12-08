@@ -1,8 +1,9 @@
 package org.linhtk.common.exception;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.linhtk.common.viewmodel.error.ErrorVm;
+
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -37,10 +38,10 @@ public class ApiExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
         List<String> errors = ex.getBindingResult()
-            .getFieldErrors()
-            .stream()
-            .map(error -> error.getField() + " " + error.getDefaultMessage())
-            .toList();
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + " " + error.getDefaultMessage())
+                .toList();
 
         return buildErrorResponse(status, INVALID_REQUEST_INFORMATION_MESSAGE, errors, ex, request, 0);
     }
@@ -50,12 +51,12 @@ public class ApiExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
         List<String> errors = ex.getAllErrors().stream()
-            .map(error -> {
-                if (error instanceof FieldError fieldError) {
-                    return fieldError.getField() + " " + fieldError.getDefaultMessage();
-                }
-                return error.getDefaultMessage();
-            }).toList();
+                .map(error -> {
+                    if (error instanceof FieldError fieldError) {
+                        return fieldError.getField() + " " + fieldError.getDefaultMessage();
+                    }
+                    return error.getDefaultMessage();
+                }).toList();
 
         return buildErrorResponse(status, INVALID_REQUEST_INFORMATION_MESSAGE, errors, ex, null, status.value());
     }
@@ -101,7 +102,7 @@ public class ApiExceptionHandler {
     protected ResponseEntity<ErrorVm> handleInternalServerErrorException(InternalServerErrorException e) {
         log.error("Internal server error exception: ", e);
         ErrorVm errorVm = new ErrorVm(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-            HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
         return ResponseEntity.internalServerError().body(errorVm);
     }
 
@@ -172,7 +173,7 @@ public class ApiExceptionHandler {
     private ResponseEntity<ErrorVm> buildErrorResponse(HttpStatus status, String message, List<String> errors,
                                                        Exception ex, WebRequest request, int statusCode) {
         ErrorVm errorVm =
-            new ErrorVm(status.toString(), status.getReasonPhrase(), message, errors);
+                new ErrorVm(status.toString(), status.getReasonPhrase(), message, errors);
 
         if (request != null) {
             log.error(ERROR_LOG_FORMAT, this.getServletPath(request), statusCode, message);
