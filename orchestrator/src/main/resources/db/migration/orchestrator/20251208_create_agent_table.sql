@@ -42,7 +42,7 @@ COMMENT ON COLUMN users.enabled IS 'Flag indicating if account is active';
 -- Purpose: Store AI agent configurations and LLM provider settings
 -- ====================================================================
 CREATE TABLE IF NOT EXISTS agent (
-    id                              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id                              VARCHAR(64) PRIMARY KEY DEFAULT gen_random_uuid(),
     description                     TEXT,
     instructions                    TEXT,
     provider_name                   VARCHAR(50) NOT NULL,
@@ -80,7 +80,7 @@ COMMENT ON COLUMN agent.is_default IS 'Flag for default agent selection';
 -- Purpose: Store tools available to agents for extended capabilities
 -- ====================================================================
 CREATE TABLE IF NOT EXISTS agent_tools (
-    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id                  VARCHAR(64) PRIMARY KEY DEFAULT gen_random_uuid(),
     agent_id            VARCHAR(50) NOT NULL,
     name                VARCHAR(100) NOT NULL,
     description         TEXT,
@@ -108,7 +108,7 @@ COMMENT ON COLUMN agent_tools.agent_tool_type IS 'Tool category (WEB_SEARCH, DAT
 -- Purpose: Store knowledge sources associated with agents
 -- ====================================================================
 CREATE TABLE IF NOT EXISTS agent_knowledge (
-    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id                  VARCHAR(64) PRIMARY KEY DEFAULT gen_random_uuid(),
     agent_id            VARCHAR(50) NOT NULL,
     name                VARCHAR(100) NOT NULL,
     source_type         VARCHAR(50) NOT NULL,
@@ -137,7 +137,7 @@ COMMENT ON COLUMN agent_knowledge.metadata IS 'JSONB metadata for flexible confi
 -- Purpose: Store chunked content with vector embeddings for semantic search
 -- ====================================================================
 CREATE TABLE IF NOT EXISTS knowledge_chunk (
-    id                      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id                      VARCHAR(64) PRIMARY KEY DEFAULT gen_random_uuid(),
     agent_knowledge_id      VARCHAR(50) NOT NULL,
     agent_id                VARCHAR(50) NOT NULL,
     chunk_order             INTEGER NOT NULL DEFAULT 0,

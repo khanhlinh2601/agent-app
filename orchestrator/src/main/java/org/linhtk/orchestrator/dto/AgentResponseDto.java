@@ -26,6 +26,7 @@ public class AgentResponseDto {
     private String providerName;
     private String providerModelName;
     private String providerEmbeddingModelName;
+    private String baseUrl;
     private String providerEndpoint;
     private boolean isPublished;
     private boolean isDefault;

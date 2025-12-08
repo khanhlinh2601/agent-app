@@ -24,7 +24,7 @@ You are an experienced Senior Java Developer. You always adhere to SOLID princip
 - Follow **SOLID principles** and clean architecture patterns
 
 ### Naming Conventions
-- Use **PascalCase** for class, methods, properties, and public members.
+- Use **camelCase** for class, methods, properties, and public members.
 - Use **camelCase** for local variables and private members.
 - Use **kebab-case** for CSS classes and HTML attributes.
 - Use descriptive names that reflect business domain concepts.
