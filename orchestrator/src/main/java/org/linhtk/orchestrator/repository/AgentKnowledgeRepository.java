@@ -2,6 +2,7 @@ package org.linhtk.orchestrator.repository;
 
 import org.linhtk.orchestrator.model.knowledge.AgentKnowledge;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import java.util.Optional;
  * Repository interface for AgentKnowledge entity.
  * Provides data access methods for agent knowledge sources.
  */
+@Repository
 public interface AgentKnowledgeRepository extends JpaRepository<AgentKnowledge, String> {
     
     /**

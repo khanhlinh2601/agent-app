@@ -28,10 +28,11 @@ public interface AgentKnowledgeMapper extends EntityCreateUpdateMapper<AgentKnow
     /**
      * Maps FileKnowledgeImportConfigRequestDto to AgentKnowledge entity.
      * Used when creating knowledge from file uploads.
-     * SourceType will be set in service layer based on file type.
+     * SourceType, agentId, and sourceUri will be set in service layer based on context.
+     * Name and metadata are mapped from the request.
      * 
-     * @param requestDto The file knowledge import request
-     * @return AgentKnowledge entity (partial mapping, requires additional fields)
+     * @param requestDto The file knowledge import request containing name and metadata
+     * @return AgentKnowledge entity (partial mapping, requires agentId, sourceType, and sourceUri)
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "agentId", ignore = true)

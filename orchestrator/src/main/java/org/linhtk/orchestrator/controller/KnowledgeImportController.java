@@ -1,5 +1,7 @@
 package org.linhtk.orchestrator.controller;
 
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.linhtk.orchestrator.dto.AgentKnowledgeImportResponseDto;
 import org.linhtk.orchestrator.dto.AgentKnowledgeResponseDto;
 import org.linhtk.orchestrator.dto.FileKnowledgeImportConfigRequestDto;
@@ -9,10 +11,11 @@ import org.linhtk.orchestrator.service.KnowledgeImportService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
-import javax.validation.Valid;
+
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/agents/{agentId}/knowledge")
 public class KnowledgeImportController {
     private final AgentKnowledgeService agentKnowledgeService;
@@ -24,10 +27,9 @@ public class KnowledgeImportController {
     }
 
     @PostMapping(path = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-
     public AgentKnowledgeImportResponseDto importFiles(@PathVariable String agentId,
                                                        @RequestPart List<MultipartFile> files,
-                                                       @Valid @ModelAttribute FileKnowledgeImportConfigRequestDto configRequestDto) {
+                                                       @Valid @RequestPart FileKnowledgeImportConfigRequestDto configRequestDto) {
         var knowledge = agentKnowledgeService.create(agentId, configRequestDto);
 
         // Collect results first to avoid stream reuse
