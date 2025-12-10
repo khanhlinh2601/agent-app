@@ -16,10 +16,6 @@ import org.springframework.ai.openai.OpenAiEmbeddingOptions;
 import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.DefaultResponseErrorHandler;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.reactive.function.client.WebClient;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -140,7 +136,7 @@ public class DynamicModelService {
      */
     private EmbeddingModel createEmbeddingModel(Agent agent) {
         return switch (agent.getProviderName().toLowerCase()) {
-            case "openai" -> createOpenAiEmbeddingModel(agent);
+            case "open ai" -> createOpenAiEmbeddingModel(agent);
             default -> throw new IllegalArgumentException("Unsupported provider: " + agent.getProviderName());
         };
     }
@@ -160,8 +156,6 @@ public class DynamicModelService {
                 .maxTokens(agent.getMaxTokens())
                 .topP(agent.getTopP())
                 .build();
-        
-        // Create OpenAI ChatModel with all observability features enabled
         // The OpenAI implementation handles metrics, tracing, and logging automatically
         ChatModel chatModel = new OpenAiChatModel(
             openAiApi,
@@ -222,8 +216,6 @@ public class DynamicModelService {
                 .baseUrl(baseUrl)
                 .completionsPath(agent.getChatCompletionsPath())
                 .embeddingsPath(agent.getEmbeddingsPath())
-                .restClientBuilder(RestClient.builder())
-                .webClientBuilder(WebClient.builder())
                 .apiKey(agent.getProviderApiKey())
                 .build();
     }

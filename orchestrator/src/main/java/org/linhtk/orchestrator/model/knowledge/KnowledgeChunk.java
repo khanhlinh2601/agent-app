@@ -7,8 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 import org.linhtk.common.model.AbstractAuditEntity;
+import org.linhtk.orchestrator.config.hibernate.VectorType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,7 +85,7 @@ public class KnowledgeChunk extends AbstractAuditEntity {
      * Null when embeddings haven't been generated or model doesn't support this dimension.
      */
     @Column(name = "embedding_768")
-    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Type(VectorType.class)
     private float[] embedding768;
 
     /**
@@ -92,6 +94,6 @@ public class KnowledgeChunk extends AbstractAuditEntity {
      * Null when embeddings haven't been generated or model doesn't support this dimension.
      */
     @Column(name = "embedding_1536")
-    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Type(VectorType.class)
     private float[] embedding1536;
 }

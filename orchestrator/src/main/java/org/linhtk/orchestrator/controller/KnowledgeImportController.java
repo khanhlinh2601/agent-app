@@ -1,5 +1,9 @@
 package org.linhtk.orchestrator.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.linhtk.orchestrator.dto.AgentKnowledgeImportResponseDto;
@@ -26,11 +30,12 @@ public class KnowledgeImportController {
         this.knowledgeImportService = knowledgeImportService;
     }
 
-    @PostMapping(path = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/import")
     public AgentKnowledgeImportResponseDto importFiles(@PathVariable String agentId,
-                                                       @RequestPart List<MultipartFile> files,
-                                                       @Valid @RequestPart FileKnowledgeImportConfigRequestDto configRequestDto) {
-        var knowledge = agentKnowledgeService.create(agentId, configRequestDto);
+                                                       @RequestPart("files") List<MultipartFile> files,
+                                                       @Valid @RequestPart("config") FileKnowledgeImportConfigRequestDto config
+    ) {
+        var knowledge = agentKnowledgeService.create(agentId, config);
 
         // Collect results first to avoid stream reuse
         var importResults = files.stream()
