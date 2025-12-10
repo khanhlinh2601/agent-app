@@ -2,6 +2,8 @@ package org.linhtk.orchestrator.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.linhtk.common.exception.NotFoundException;
+import org.linhtk.orchestrator.dto.KnowledgeChunkResponseDto;
+import org.linhtk.orchestrator.mapper.KnowledgeChunkMapper;
 import org.linhtk.orchestrator.model.knowledge.AgentKnowledge;
 import org.linhtk.orchestrator.model.knowledge.KnowledgeChunk;
 import org.linhtk.orchestrator.repository.AgentKnowledgeRepository;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Service for managing knowledge chunks.
@@ -29,15 +32,18 @@ public class KnowledgeChunkService {
     private final AgentKnowledgeRepository agentKnowledgeRepository;
     private final DynamicModelService dynamicModelService;
     private final VectorStoreService vectorStoreService;
+    private final KnowledgeChunkMapper knowledgeChunkMapper;
 
     public KnowledgeChunkService(KnowledgeChunkRepository knowledgeChunkRepository,
                                  AgentKnowledgeRepository agentKnowledgeRepository,
                                  DynamicModelService dynamicModelService,
-                                 VectorStoreService vectorStoreService) {
+                                 VectorStoreService vectorStoreService,
+                                 KnowledgeChunkMapper knowledgeChunkMapper) {
         this.knowledgeChunkRepository = knowledgeChunkRepository;
         this.agentKnowledgeRepository = agentKnowledgeRepository;
         this.dynamicModelService = dynamicModelService;
         this.vectorStoreService = vectorStoreService;
+        this.knowledgeChunkMapper = knowledgeChunkMapper;
     }
 
     /**
@@ -71,6 +77,7 @@ public class KnowledgeChunkService {
         // Build knowledge chunk entity
         KnowledgeChunk chunk = KnowledgeChunk.builder()
                 .agentKnowledgeId(knowledgeId)
+                .agentId(agentId)
                 .content(document.getText())
                 .chunkOrder(chunkOrder)
                 .metadata(document.getMetadata())
@@ -146,7 +153,7 @@ public class KnowledgeChunkService {
      * @return List of knowledge chunks ordered by chunk order
      * @throws NotFoundException if knowledge doesn't exist or doesn't belong to agent
      */
-    public List<KnowledgeChunk> getByKnowledge(String agentId, String knowledgeId) {
+    public List<KnowledgeChunkResponseDto> getByKnowledge(String agentId, String knowledgeId) {
         log.debug("Getting chunks for knowledge: {}, agent: {}", knowledgeId, agentId);
 
         // Validate ownership first - ensures knowledge exists and belongs to agent
@@ -156,7 +163,9 @@ public class KnowledgeChunkService {
         List<KnowledgeChunk> chunks = knowledgeChunkRepository.findAllByKnowledgeIdAndAgentId(knowledgeId, agentId);
 
         log.debug("Found {} chunks for knowledge: {}", chunks.size(), knowledgeId);
-        return chunks;
+        return chunks.stream().map(
+                knowledgeChunkMapper::toVmResponse
+        ).collect(Collectors.toList());
     }
 
     /**
@@ -170,7 +179,7 @@ public class KnowledgeChunkService {
      * @return List of similar knowledge chunks ordered by relevance
      * @throws NotFoundException if knowledge doesn't exist or doesn't belong to agent
      */
-    public List<KnowledgeChunk> searchSimilarChunks(String agentId, String knowledgeId, String query, int topK) {
+    public List<KnowledgeChunkResponseDto> searchSimilarChunks(String agentId, String knowledgeId, String query, int topK) {
         log.debug("Searching similar chunks for knowledge: {}, agent: {}, query: {}, topK: {}",
                 knowledgeId, agentId, query, topK);
 
@@ -216,7 +225,7 @@ public class KnowledgeChunkService {
             log.info("Found {} similar chunks for knowledge: {}, query: '{}'",
                     similarChunks.size(), knowledgeId, query);
 
-            return similarChunks;
+            return similarChunks.stream().map(knowledgeChunkMapper::toVmResponse).collect(Collectors.toList());
 
         } catch (Exception e) {
             log.error("Failed to search similar chunks: knowledge={}, error={}",
