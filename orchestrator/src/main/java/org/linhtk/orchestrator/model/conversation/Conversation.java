@@ -21,4 +21,5 @@ public class Conversation extends AbstractAuditEntity {
 
     private String name;
     private String sessionId;
+    private String agentId;
 }

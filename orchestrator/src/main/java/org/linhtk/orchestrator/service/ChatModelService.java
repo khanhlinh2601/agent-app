@@ -57,6 +57,42 @@ public class ChatModelService {
     //Create Tool for agent
     //Create knowledge for agent
 
+    /**
+     * Creates a summary or title from the given text using the AI model.
+     * Used for generating conversation names from the first user message.
+     * 
+     * @param agentId The agent ID to use for the model
+     * @param text The text to summarize
+     * @param maxLength Maximum length of the summary
+     * @return A concise summary or title
+     */
+    public String createSummarize(String agentId, String text, int maxLength) {
+        log.debug("Creating summary for agent: {} with max length: {}", agentId, maxLength);
+        
+        var model = dynamicModelService.getChatModel(agentId);
+        var chatClient = ChatClient.builder(model).build();
+        
+        String prompt = String.format(
+            "Create a concise title (maximum %d characters) for a conversation that starts with: \"%s\". " +
+            "Return only the title without quotes or additional text.",
+            maxLength,
+            text.length() > 200 ? text.substring(0, 200) + "..." : text
+        );
+        
+        String summary = chatClient.prompt()
+            .user(prompt)
+            .call()
+            .content();
+            
+        // Ensure summary doesn't exceed max length
+        if (summary != null && summary.length() > maxLength) {
+            summary = summary.substring(0, maxLength - 3) + "...";
+        }
+        
+        log.debug("Generated summary: {}", summary);
+        return summary != null ? summary.trim() : "New Conversation";
+    }
+
     public Flux<String> call(ChatRequestDto requestDto, List<String> history, String summary) {
         var model = dynamicModelService.getChatModel(requestDto.getAgentId());
         var chatClient = ChatClient.builder(model).build();

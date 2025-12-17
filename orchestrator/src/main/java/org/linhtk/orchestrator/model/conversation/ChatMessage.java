@@ -19,5 +19,6 @@ public class ChatMessage extends AbstractAuditEntity {
     private String conversationId;
     private String content;
     private String agentId;
+    private int type; // 0=USER, 1=ASSISTANT, 2=SYSTEM
 
 }
